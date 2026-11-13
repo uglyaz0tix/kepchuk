@@ -1,0 +1,30 @@
+[package]
+name = "kepchuk"
+version = "0.1.0"
+edition = "2021"
+authors = ["uglyaz0tix"]
+license = "BSD-3-Clause"
+description = "Kepchuk Central Server for AI Character Network"
+
+[dependencies]
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1.38", features = ["full"] }
+tower-http = { version = "0.5", features = ["trace", "cors"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+hex = "0.4"
+dashmap = "5.5"
+rusqlite = { version = "0.31", features = ["bundled"] }
+subtle = "2.5"
+uuid = { version = "1.8", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+async-trait = "0.1"
+
+[dev-dependencies]
+tower = { version = "0.4", features = ["util"] }
+
+[build-dependencies]
+cc = "1.0"
+bindgen = "0.69"

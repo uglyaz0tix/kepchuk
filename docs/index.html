@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KepchukAPI Documentation</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --sidebar-bg: #161b22;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --accent-hover: #1f6feb;
+      --success: #238636;
+      --warning: #d29922;
+      --code-bg: #0d1117;
+      --badge-bg: #21262d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 280px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--heading);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand span {
+      background: var(--accent);
+      color: #000;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    nav ul { list-style: none; }
+    nav li { margin-bottom: 6px; }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+    nav a:hover, nav a.active {
+      color: var(--heading);
+      background: rgba(88, 166, 255, 0.1);
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 18px 12px 6px;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 40px 60px;
+      max-width: 1000px;
+      overflow-y: auto;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--heading);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    h1 { font-size: 2.25rem; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    h2 { font-size: 1.5rem; margin-top: 40px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    h3 { font-size: 1.15rem; margin-top: 24px; }
+
+    p, ul, ol { margin-bottom: 16px; }
+    ul, ol { padding-left: 24px; }
+    li { margin-bottom: 6px; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .method {
+      display: inline-block;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+    .method.get { background: rgba(88, 166, 255, 0.15); color: var(--accent); }
+    .method.post { background: rgba(46, 160, 67, 0.15); color: #3fb950; }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+      font-family: monospace;
+      color: var(--heading);
+    }
+
+    pre, code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    code {
+      background: var(--badge-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #79c0ff;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #e6edf3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th {
+      background: var(--sidebar-bg);
+      color: var(--heading);
+    }
+
+    /* Interactive Calculator */
+    .calc-input {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .calc-input label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .calc-input input, .calc-input textarea {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: var(--heading);
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    .calc-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .calc-btn:hover { background: #2ea043; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <aside>
+    <div class="brand">
+      KepchukAPI <span>v0.1.0</span>
+    </div>
+    <nav>
+      <div class="nav-section-title">Getting Started</div>
+      <ul>
+        <li><a href="#overview">Overview & Architecture</a></li>
+        <li><a href="#quickstart">Quickstart</a></li>
+        <li><a href="#auth-model">3-Layer Security Model</a></li>
+        <li><a href="#interactive-calc">Signature Playground</a></li>
+      </ul>
+
+      <div class="nav-section-title">API Reference</div>
+      <ul>
+        <li><a href="#sys-endpoints">System Health</a></li>
+        <li><a href="#auth-endpoints">Bot Authentication</a></li>
+        <li><a href="#subs-endpoints">Tokens & Billing</a></li>
+        <li><a href="#block-endpoints">User Moderation</a></li>
+        <li><a href="#bot-endpoints">Bot Lifecycle</a></li>
+      </ul>
+
+      <div class="nav-section-title">Client Guides</div>
+      <ul>
+        <li><a href="#client-python">Python Integration</a></li>
+        <li><a href="#client-go">Go Integration</a></li>
+        <li><a href="#security-vectors">Security Vectors</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <section id="overview">
+      <h1>KepchukAPI Technical Documentation</h1>
+      <p>
+        KepchukAPI is a high-performance, deterministic Central Server (CS) for AI character networks.
+        It acts as the single source of truth for user subscriptions, token consumption, dynamic rate limiting,
+        and bot authentication.
+      </p>
+
+      <div class="card">
+        <h3>Core Architecture Principles</h3>
+        <ul>
+          <li><strong>Pure C11 Cryptography:</strong> Zero external crypto crates. SHA-256 and HMAC-SHA256 implemented in pure C11, verified against NIST FIPS 180-4 and RFC 4231.</li>
+          <li><strong>Constant-Time Execution:</strong> Hardened against side-channel attacks using volatile accumulators and subtle timing equivalence.</li>
+          <li><strong>Asynchronous Rust Core:</strong> Powered by Axum, Tokio, and Tower for ultra-low latency routing.</li>
+          <li><strong>Standalone Deployment:</strong> Compiles to a single static binary with embedded SQLite and zero external runtime shared libraries.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="quickstart">
+      <h2>Quickstart</h2>
+      <p>Build and start the server with Cargo:</p>
+      <pre><code># clone and start
+git clone https://github.com/uglyaz0tix/kepchuk.git
+cd kepchuk
+cargo run --release
+
+# test server liveness
+curl http://localhost:8080/healthz</code></pre>
+    </section>
+
+    <section id="auth-model">
+      <h2>3-Layer Security Model</h2>
+      <p>All protected endpoints enforce strict verification across three independent layers:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Mechanism</th>
+            <th>Failure Response</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Level 1: Identity</strong></td>
+            <td><code>X-Bot-ID</code> + <code>X-API-Key</code>. The API key is verified via its SHA-256 digest against the storage engine.</td>
+            <td><code>401 Unauthorized</code></td>
+          </tr>
+          <tr>
+            <td><strong>Level 2: Proof of Key & TTL</strong></td>
+            <td><code>X-Timestamp</code> (sliding 300s window) + <code>X-Signature</code> (HMAC-SHA256).</td>
+            <td><code>401 Unauthorized</code></td>
+          </tr>
+          <tr>
+            <td><strong>Level 3: Anti-Replay</strong></td>
+            <td><code>X-Nonce</code> (UUID or unique hex). Stored in an in-memory TTL cache for 5 minutes.</td>
+            <td><code>409 Conflict</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Canonical Signature Formula</h3>
+      <pre><code>time_window = timestamp / 300
+body_sha256 = hex(sha256(request_body))
+message = bot_id + ":" + timestamp + ":" + nonce + ":" + body_sha256
+signature = hex(hmac_sha256(bot_secret, time_window + ":" + message))</code></pre>
+      <p><em>Note: If the request body is empty (e.g. GET requests), <code>body_sha256</code> is the SHA-256 of empty bytes (<code>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code>).</em></p>
+    </section>
+
+    <section id="interactive-calc">
+      <h2>Signature Playground</h2>
+      <div class="card">
+        <p>Test the canonical signature algorithm live in your browser:</p>
+        <div class="calc-input">
+          <label>Bot ID</label>
+          <input type="text" id="calc_bot_id" value="anime_girl">
+        </div>
+        <div class="calc-input">
+          <label>Bot Secret</label>
+          <input type="text" id="calc_bot_secret" value="sec_test_secret_key_12345">
+        </div>
+        <div class="calc-input">
+          <label>Payload Body (JSON or empty)</label>
+          <textarea id="calc_body" rows="3">{"user_id": "user_1", "tokens": 150, "reason": "chat_reply"}</textarea>
+        </div>
+        <button class="calc-btn" onclick="generateInteractiveSignature()">Generate Signature & Headers</button>
+
+        <h4 style="margin-top: 16px;">Computed Headers:</h4>
+        <pre><code id="calc_output">// Click "Generate Signature & Headers" above</code></pre>
+      </div>
+    </section>
+
+    <section id="sys-endpoints">
+      <h2>System Endpoints</h2>
+      <div class="card">
+        <div class="endpoint-header"><span class="method get">GET</span> /healthz</div>
+        <p>Liveness probe for orchestrators.</p>
+        <p><strong>Response (200 OK):</strong> <code>ok</code></p>
+      </div>
+
+      <div class="card">
+        <div class="endpoint-header"><span class="method get">GET</span> /readyz</div>
+        <p>Readiness probe executing an active database ping.</p>
+        <p><strong>Response (200 OK):</strong> <code>ready</code></p>
+      </div>
+    </section>
+
+    <section id="auth-endpoints">
+      <h2>Bot Authentication Endpoints</h2>
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/auth/register</div>
+        <p>Registers a new bot identity and issues credentials (returned once).</p>
+        <pre><code>// Request Body
+{
+  "bot_id": "yuki_chan"
+}
+
+// Response (200 OK)
+{
+  "bot_id": "yuki_chan",
+  "api_key": "ak_live_7c3a9f0e8124483a9084c0e69bd89410...",
+  "bot_secret": "sec_49b5c328de804f568f9b3e10fa493d9b..."
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/auth/rotate</div>
+        <p>Rotates the secret key of the authenticated bot. Requires all 3 auth layers.</p>
+        <p><strong>Response (200 OK):</strong> <code>{"bot_id": "yuki_chan", "bot_secret": "sec_new_..."}</code></p>
+      </div>
+    </section>
+
+    <section id="subs-endpoints">
+      <h2>Tokens & Billing Endpoints</h2>
+      <div class="card">
+        <div class="endpoint-header"><span class="method get">GET</span> /kep/subs/status/:user_id</div>
+        <p>Retrieves user balance, tier, and block status.</p>
+        <pre><code>// Response (200 OK)
+{
+  "user_id": "user_123",
+  "tokens": 1000,
+  "tier": "free",
+  "is_blocked": false
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/subs/consume</div>
+        <p>Atomically debits tokens from a user account for character messages or operations.</p>
+        <pre><code>// Request Body
+{
+  "user_id": "user_123",
+  "tokens": 150,
+  "reason": "chat_message"
+}
+
+// Response (200 OK)
+{
+  "status": "success",
+  "new_balance": 850,
+  "notify_owner": false
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/subs/purchase</div>
+        <p>Webhook for payment processors to credit tokens.</p>
+        <pre><code>// Request Body
+{
+  "user_id": "user_123",
+  "package": "pro",
+  "tokens": 500
+}
+
+// Response (200 OK)
+{
+  "status": "success",
+  "user_id": "user_123",
+  "new_balance": 1350
+}</code></pre>
+      </div>
+    </section>
+
+    <section id="block-endpoints">
+      <h2>User Moderation Endpoints</h2>
+      <div class="card">
+        <div class="endpoint-header"><span class="method get">GET</span> /kep/block/check/:user_id</div>
+        <p>Checks whether a user is currently banned.</p>
+      </div>
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/block/user</div>
+        <p>Blocks a user for a given duration in hours.</p>
+        <pre><code>// Request Body
+{
+  "user_id": "user_123",
+  "reason": "terms_violation",
+  "duration_hours": 24
+}</code></pre>
+      </div>
+    </section>
+
+    <section id="bot-endpoints">
+      <h2>Bot Lifecycle Endpoints</h2>
+      <div class="card">
+        <div class="endpoint-header"><span class="method post">POST</span> /kep/bot/heartbeat</div>
+        <p>Reports bot telemetry and load status.</p>
+      </div>
+      <div class="card">
+        <div class="endpoint-header"><span class="method get">GET</span> /kep/bot/config/:bot_id</div>
+        <p>Retrieves limits and enabled capabilities for the bot.</p>
+      </div>
+    </section>
+
+    <section id="client-python">
+      <h2>Python Integration Example</h2>
+      <pre><code>import time, uuid, hashlib, hmac, json, requests
+
+def send_bot_request(base_url, endpoint, bot_id, api_key, bot_secret, payload=None):
+    body_bytes = json.dumps(payload).encode('utf-8') if payload else b""
+    body_hash = hashlib.sha256(body_bytes).hexdigest()
+    ts = int(time.time())
+    nonce = str(uuid.uuid4())
+    time_window = str(ts // 300)
+
+    message = f"{bot_id}:{ts}:{nonce}:{body_hash}"
+    signed_data = f"{time_window}:{message}".encode('utf-8')
+    sig = hmac.new(bot_secret.encode('utf-8'), signed_data, hashlib.sha256).hexdigest()
+
+    headers = {
+        "Content-Type": "application/json",
+        "X-Bot-ID": bot_id,
+        "X-API-Key": api_key,
+        "X-Timestamp": str(ts),
+        "X-Nonce": nonce,
+        "X-Signature": sig,
+    }
+    return requests.post(f"{base_url}{endpoint}", data=body_bytes if payload else None, headers=headers)</code></pre>
+    </section>
+
+    <section id="client-go">
+      <h2>Go Integration Example</h2>
+      <pre><code>// see docs/BOT_GUIDE.md for complete runnable Go client package</code></pre>
+    </section>
+
+    <section id="security-vectors">
+      <h2>Security Vectors & Verification</h2>
+      <p>The test harness <code>tests/security_check.py</code> continuously audits 17 attack vectors:</p>
+      <ul>
+        <li>Missing individual headers $\to$ <code>401 Unauthorized</code></li>
+        <li>Invalid API key $\to$ <code>401 Unauthorized</code></li>
+        <li>Past expired timestamp $\to$ <code>401 Unauthorized</code></li>
+        <li>Future skewed timestamp $\to$ <code>401 Unauthorized</code></li>
+        <li>Duplicate nonce replay $\to$ <code>409 Conflict</code></li>
+        <li>Body modification after signing $\to$ <code>401 Unauthorized</code></li>
+        <li>Forged signature bytes $\to$ <code>401 Unauthorized</code></li>
+        <li>Cross-bot impersonation $\to$ <code>401 Unauthorized</code></li>
+        <li>Negative balance injection $\to$ <code>400 Bad Request</code></li>
+        <li>Excessive balance drainage $\to$ <code>400 Bad Request</code></li>
+        <li>Consumption by blocked user $\to$ <code>403 Forbidden</code></li>
+        <li>Post-rotation retired secret invalidation $\to$ <code>401 Unauthorized</code></li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    // In-browser SHA256 and HMAC-SHA256 for the playground
+    async function sha256Hex(msgBytes) {
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBytes);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function hmacSha256Hex(keyStr, dataStr) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(keyStr),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+      const signature = await crypto.subtle.sign('HMAC', key, enc.encode(dataStr));
+      const hashArray = Array.from(new Uint8Array(signature));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function generateInteractiveSignature() {
+      const botId = document.getElementById('calc_bot_id').value.trim();
+      const secret = document.getElementById('calc_bot_secret').value.trim();
+      const body = document.getElementById('calc_body').value;
+      const enc = new TextEncoder();
+      const bodyBytes = body.length > 0 ? enc.encode(body) : new Uint8Array();
+
+      const bodyHash = await sha256Hex(bodyBytes);
+      const ts = Math.floor(Date.now() / 1000);
+      const nonce = crypto.randomUUID();
+      const timeWindow = Math.floor(ts / 300).toString();
+
+      const message = `${botId}:${ts}:${nonce}:${bodyHash}`;
+      const payload = `${timeWindow}:${message}`;
+      const signature = await hmacSha256Hex(secret, payload);
+
+      const output = [
+        `X-Bot-ID:    ${botId}`,
+        `X-API-Key:   ak_live_...`,
+        `X-Timestamp: ${ts}`,
+        `X-Nonce:     ${nonce}`,
+        `X-Signature: ${signature}`,
+        ``,
+        `// Canonical Calculation Breakdown:`,
+        `Time Window:  ${timeWindow}`,
+        `Body SHA-256: ${bodyHash}`,
+        `Signed Text:  ${payload}`
+      ].join('\n');
+
+      document.getElementById('calc_output').textContent = output;
+    }
+  </script>
+</body>
+</html>
